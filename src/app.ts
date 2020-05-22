@@ -45,7 +45,7 @@ export default class App {
                 // current sweets to deal with
                 let n = (amount - selectedPackets.reduce((a, b) => a + b, 0));
                 // while sweets are greater then packet size
-                if (n > (size - (sortedPackets[i+1] / 3))) {
+                if (n > (size - (sortedPackets[i + 1] / 2))) {
                     console.log('adding packet');
                     selectedPackets.push(size);
                 } else {
@@ -60,7 +60,6 @@ export default class App {
             const found: number[] = this.packetSizes.filter(element => element >= remainder);
 
             // ? could add a validation function
-            // ! packets could be condensed for larger numbers 
 
             selectedPackets.push(found[found.length - 1]);
         }
@@ -69,8 +68,9 @@ export default class App {
     }
 
     async mainMenu() {
-        let selection = await new Promise((resolve, reject) => {
-            this.rl.question("sweetshop menu, select an option\n[0] - create order\n[1] - view packet sizes\n[2] - exit\n", (input: string) => {
+        const options = "sweetshop menu, select an option\n[0] - create order\n[1] - view packet sizes\n[2] - exit\n";
+        const selection = await new Promise((resolve, reject) => {
+            this.rl.question(options, (input: string) => {
                 resolve(input);
             });
         });
@@ -131,12 +131,18 @@ export default class App {
     }
 
     async packetMenu() {
-        
-        let selection = await new Promise((resolve, reject) => {
+
+        const options = this.packetSizes
+            .map((p: number, i: number) => `[${i}] ${p}`)
+            .join('\n');
+
+        const selection = await new Promise((resolve, reject) => {
             this.rl.question(
-                `Packet menu, select an option\n${this.packetSizes.map((p:number, i:number) => `[${i}] ${p}`).join('\n')}\n[add] add new packet\n[back] back to main menu\n`, (input: string) => {
-                resolve(input);
-            });
+                `Packet menu, select an option\n${options}\n[add] add new packet\n[back] back to main menu\n`,
+                (input: string) => {
+                    resolve(input);
+                }
+            );
         });
 
         if (!isNaN(selection as number) && Number(selection) < this.packetSizes.length) {
