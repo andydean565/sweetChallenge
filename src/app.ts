@@ -131,8 +131,10 @@ export default class App {
     }
 
     async packetMenu() {
+        
         let selection = await new Promise((resolve, reject) => {
-            this.rl.question(`Packet menu, select an option\n${this.packetSizes.map((p:number, i:number) => `[${i}] ${p}`).join('\n')}\n[add] add new packet\n[back] back to main menu\n`, (input: string) => {
+            this.rl.question(
+                `Packet menu, select an option\n${this.packetSizes.map((p:number, i:number) => `[${i}] ${p}`).join('\n')}\n[add] add new packet\n[back] back to main menu\n`, (input: string) => {
                 resolve(input);
             });
         });
