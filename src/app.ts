@@ -45,7 +45,8 @@ export default class App {
                 // current sweets to deal with
                 let n = (amount - selectedPackets.reduce((a, b) => a + b, 0));
                 // while sweets are greater then packet size
-                if (n >= size) {
+                if (n > (size - (sortedPackets[i+1] / 3))) {
+                    console.log('adding packet');
                     selectedPackets.push(size);
                 } else {
                     filled = true;
