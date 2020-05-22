@@ -55,7 +55,7 @@ export default class App {
                 // skip all sizes to small
                 if(sortedPackets[i] >= remainder){
                     // check if remainder would be smaller with previous
-                    if(Math.abs(sortedPackets[i] - remainder) > Math.abs(sortedPackets[i - 1] - remainder) && (i - 1 > 0)){
+                    if(i - 1 > 0 && Math.abs(sortedPackets[i] - remainder) > Math.abs(sortedPackets[i - 1] - remainder)){
                         selectedPackets.push(sortedPackets[i - 1]);
                     } else {
                         selectedPackets.push(sortedPackets[i]);
@@ -75,10 +75,8 @@ export default class App {
         let selection = await new Promise((resolve, reject) => {
             this.rl.question("sweetshop menu, select an option\n[0] - create order\n[1] - view packet sizes\n[2] - exit\n", (input: string) => {
                 resolve(input);
-                // this.rl.close();
             });
         });
-        // this.rl.close();
         switch (Number(selection)) {
             case 0:
                 // * create order
@@ -107,9 +105,7 @@ export default class App {
             case 2:
                 // * exit program
                 console.log('sweet shop shutting down...');
-                this.rl.close();
                 process.exit(0);
-                break;
             default:
                 console.log('no option selected, please try again');
                 this.mainMenu();
@@ -134,7 +130,6 @@ export default class App {
                 console.log('invalid number, try again');
             }
         }
-        // this.rl.close();
         return number;
     }
 
