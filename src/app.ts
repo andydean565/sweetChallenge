@@ -5,7 +5,7 @@ export default class App {
 
     packetSizes: number[];
     orders: any[];
-    rl:any = readline.createInterface({
+    rl: any = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });;
@@ -32,44 +32,40 @@ export default class App {
         });
     }
 
-
-    leastRemander(packets:number[], amount:number){
-
-        let comb:number[];
-        packets.forEach(element => {
-            packets.forEach(element => {
-            
-            });
-        });
-    }
-
-    calcOrder(amount:number){
+    calcOrder(amount: number) {
 
         let selectedPackets = [];
-        const sortedPackets = this.packetSizes.sort((a, b) => a - b);
 
-        while (selectedPackets.length == 0 || selectedPackets.reduce((a, b) => a + b, 0) < amount){
-            for (let i = 0; i < sortedPackets.length; i++) {
-                // sweets left to fill
-                let remainder = (amount - selectedPackets.reduce((a, b) => a + b, 0));
-                // skip all sizes to small
-                if(sortedPackets[i] >= remainder){
-                    // check if remainder would be smaller with previous
-                    if(i - 1 > 0 && Math.abs(sortedPackets[i] - remainder) > Math.abs(sortedPackets[i - 1] - remainder)){
-                        selectedPackets.push(sortedPackets[i - 1]);
-                    } else {
-                        selectedPackets.push(sortedPackets[i]);
-                    }
-                    break;
-                } else if(i == (sortedPackets.length - 1)) {
-                    selectedPackets.push(sortedPackets[i]);
+        // sort from largest to smallest
+        const sortedPackets = this.packetSizes.sort((a, b) => a - b).reverse();
+
+        sortedPackets.forEach((size: number, i: number) => {
+            let filled = false;
+            while (!filled) {
+                // current sweets to deal with
+                let n = (amount - selectedPackets.reduce((a, b) => a + b, 0));
+                // while sweets are greater then packet size
+                if (n >= size) {
+                    selectedPackets.push(size);
+                } else {
+                    filled = true;
                 }
             }
+        });
+
+        const remainder = amount - selectedPackets.reduce((a, b) => a + b, 0);
+
+        if (remainder > 0) {
+            const found: number[] = this.packetSizes.filter(element => element >= remainder);
+
+            // ? could add a validation function
+            // ! packets could be condensed for larger numbers 
+
+            selectedPackets.push(found[found.length - 1]);
         }
-        
+
         return selectedPackets;
     }
-
 
     async mainMenu() {
         let selection = await new Promise((resolve, reject) => {
@@ -85,7 +81,7 @@ export default class App {
                     if (!isNaN(data as number)) {
                         const packets = this.calcOrder(data);
                         const order = {
-                            amount:data,
+                            amount: data,
                             packets: packets,
                             total: packets.reduce((a, b) => a + b, 0)
                         };
@@ -126,7 +122,7 @@ export default class App {
             });
             if (number == 'back' || number == 'remove') {
                 exit = true;
-            } else if(isNaN(number)){
+            } else if (isNaN(number)) {
                 console.log('invalid number, try again');
             }
         }
@@ -150,8 +146,7 @@ export default class App {
                     this.packetSizes[index] = Number(data);
                     console.log('updated packet size');
                     this.save();
-                } else if(data == 'remove'){
-                    // invalid
+                } else if (data == 'remove') {
                     this.packetSizes.splice(index, 1);
                     this.save();
                     console.log('packet size removed')
@@ -186,7 +181,6 @@ export default class App {
                     this.packetMenu();
                     break;
             }
-            // check other options
         }
     }
 }
