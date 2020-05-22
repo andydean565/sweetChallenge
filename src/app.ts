@@ -8,7 +8,7 @@ export default class App {
     rl: any = readline.createInterface({
         input: process.stdin,
         output: process.stdout
-    });;
+    });
 
     constructor() {
         console.log('sweet shop starting up...');
