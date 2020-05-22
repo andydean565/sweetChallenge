@@ -5,19 +5,14 @@ export default class App {
 
     packetSizes: number[];
     orders: any[];
-    rl: any;
+    rl:any = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });;
 
     constructor() {
         console.log('sweet shop starting up...');
-
         this.config();
-
-        // user input 
-        this.rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
-
         this.mainMenu();
     }
 
@@ -37,6 +32,17 @@ export default class App {
         });
     }
 
+
+    leastRemander(packets:number[], amount:number){
+
+        let comb:number[];
+        packets.forEach(element => {
+            packets.forEach(element => {
+            
+            });
+        });
+    }
+
     calcOrder(amount:number){
 
         let selectedPackets = [];
@@ -44,13 +50,23 @@ export default class App {
 
         while (selectedPackets.length == 0 || selectedPackets.reduce((a, b) => a + b, 0) < amount){
             for (let i = 0; i < sortedPackets.length; i++) {
-                if(sortedPackets[i] >= (amount - selectedPackets.reduce((a, b) => a + b, 0)) || i == (sortedPackets.length - 1)){
-                    // get lower packet size which is above remaining || or last biggest packet
-                    selectedPackets.push(sortedPackets[i]);
+                // sweets left to fill
+                let remainder = (amount - selectedPackets.reduce((a, b) => a + b, 0));
+                // skip all sizes to small
+                if(sortedPackets[i] >= remainder){
+                    // check if remainder would be smaller with previous
+                    if(Math.abs(sortedPackets[i] - remainder) > Math.abs(sortedPackets[i - 1] - remainder) && (i - 1 > 0)){
+                        selectedPackets.push(sortedPackets[i - 1]);
+                    } else {
+                        selectedPackets.push(sortedPackets[i]);
+                    }
                     break;
+                } else if(i == (sortedPackets.length - 1)) {
+                    selectedPackets.push(sortedPackets[i]);
                 }
             }
         }
+        
         return selectedPackets;
     }
 
@@ -171,6 +187,8 @@ export default class App {
                     this.mainMenu();
                     break;
                 default:
+                    console.log('no option selected, please try again');
+                    this.packetMenu();
                     break;
             }
             // check other options
