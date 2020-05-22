@@ -1,0 +1,1 @@
+{"orders":[{"amount":"4000","packets":[1000,1000,1000,1000],"total":4000},{"amount":"2500","packets":[1000,1000,500],"total":2500}],"packetSizes":[250,500,1000]}
